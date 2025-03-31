@@ -27,6 +27,7 @@
      <a id="authURL" href target="_blank">Click to authorize</a>
      
      <!-- STEP 2 -- MAKE SURE STEP 1 WORKS BEFORE MOVING ON-->
+     
      <h4>Step 2: Get your code and exchange for an access token</h4>
      <p>
        After you’re redirected back to your Meet app on GitHub, copy the code
@@ -95,6 +96,26 @@
          });
      };
      // --------------------- END OF STEP 2
+
+    // -- STEP 3
+    const getEvents = document.getElementById("getEvents");
+      const events = document.getElementById("events");
+      const getCalendarEvents = "https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-events";
+
+
+      getEvents.onclick = function () {
+        const { access_token } = JSON.parse(accessTokenElement.innerText);
+        const eventRequest = getCalendarEvents + "/" + access_token;
+        fetch(eventRequest)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (json) {
+            events.innerText = JSON.stringify(json, null, 2);
+          });
+      };
+      // -- END OF STEP 3
+
    </script>
  </body>
 </html>
