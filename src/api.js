@@ -1,25 +1,91 @@
 import mockData from './mock-data';
 
+async function checkToken(token) {
+  const res = await fetch(
+    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${token}`
+  );
+  return res.json();
+}
+
+
+function removeQuery() {
+  if (window.history.replaceState) {
+    const { protocol, host, pathname } = window.location;
+    const newUrl = `${protocol}//${host}${pathname}`;
+    window.history.replaceState({}, '', newUrl);
+  }
+}
+
+
+export async function getAccessToken() {
+  let token = localStorage.getItem('access_token');
+
+  // Check if token is valid
+  if (token) {
+    const info = await checkToken(token);
+    if (info.error) {
+      localStorage.removeItem('access_token');
+      token = null;
+    }
+  }
+
+  // If no valid token, look for a code in the URL or redirect
+  if (!token) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (!code) {
+      // Request an auth URL and send the user there
+      const resp = await fetch(
+        'https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-auth-url'
+      );
+      const { authUrl } = await resp.json();
+      window.location.href = authUrl;
+      return null; // navigation away
+    }
+
+    // Exchange code for token
+    const exchange = await fetch(
+      `https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/token/${encodeURIComponent(
+        code
+      )}`
+    );
+    const { access_token } = await exchange.json();
+    localStorage.setItem('access_token', access_token);
+    removeQuery();
+    return access_token;
+  }
+
+  // Clean up the URL and return the existing token
+  removeQuery();
+  return token;
+}
 
 /**
- *
- * @param {*} events:
- * The following function should be in the “api.js” file.
- * This function takes an events array, then uses map to create a new array with only locations.
- * It will also remove all duplicates by creating another new array using the spread operator and spreading a Set.
- * The Set will remove all duplicates from the array.
+ * Get the list of events.
+ * - On localhost: return mockData
+ * - Otherwise: fetch real events using the OAuth token
  */
-export const extractLocations = (events) => {
-  const extractedLocations = events.map((event) => event.location);
-  const locations = [...new Set(extractedLocations)];
-  return locations;
-};
+export async function getEvents() {
+  // during development, skip the API
+  if (window.location.href.startsWith('http://localhost')) {
+    return mockData;
+  }
 
+  const token = await getAccessToken();
+  if (!token) return [];
+
+  const res = await fetch(
+    `https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/events/${token}`
+  );
+  const json = await res.json();
+  return json.events || [];
+}
 
 /**
- *
- * This function will fetch the list of all events
+ * Pull out all unique locations from an array of event objects.
  */
-export const getEvents = async () => {
-  return mockData;
-};
+export function extractLocations(events = []) {
+  const allLocs = events.map(e => e.location);
+  return [...new Set(allLocs)];
+}

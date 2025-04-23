@@ -1,4 +1,3 @@
-// src/__tests__/NumberOfEvents.test.js
 import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -6,8 +5,16 @@ import NumberOfEvents from './components/NumberOfEvents';
 
 
 
-
 describe('<NumberOfEvents /> component', () => {
+  let NumberOfEventsComponent;
+  let setCurrentNOE;
+  beforeEach(() => {
+    NumberOfEventsComponent = render(<NumberOfEvents 
+      currentNOE={32} 
+      setCurrentNOE={setCurrentNOE}
+      setErrorAlert={() => { }} />);
+  });
+  
   test('contains an element with the role "textbox"', () => {
     const { getByRole } = render(<NumberOfEvents />);
     const textbox = getByRole('textbox');
