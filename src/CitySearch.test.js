@@ -7,10 +7,7 @@ import { extractLocations, getEvents } from './api';
 
 
 describe('<CitySearch /> component', () => {
-    let CitySearchComponent;
-    beforeEach(() => {
-      CitySearchComponent = render(<CitySearch allLocations={[]}/>);
-    });
+
 
   let CitySearchDOM;
   let cityTextBox;
@@ -66,18 +63,18 @@ test('renders the suggestion text in the textbox upon clicking on the suggestion
     const user = userEvent.setup();
     const allEvents = await getEvents();
     const allLocations = extractLocations(allEvents);
-    CitySearchComponent.rerender(<CitySearch
+    CitySearchDom.rerender(<CitySearch
       allLocations={allLocations}
       setCurrentCity={() => { }}
     />);
  
  
-    const cityTextBox = CitySearchComponent.queryByRole('textbox');
+    const cityTextBox = CitySearchDom.queryByRole('textbox');
     await user.type(cityTextBox, "Berlin");
  
  
     // the suggestion's textContent look like this: "Berlin, Germany"
-    const BerlinGermanySuggestion = CitySearchComponent.queryAllByRole('listitem')[0];
+    const BerlinGermanySuggestion = CitySearchDom.queryAllByRole('listitem')[0];
  
  
     await user.click(BerlinGermanySuggestion);

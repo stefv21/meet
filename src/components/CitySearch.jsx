@@ -21,19 +21,7 @@ const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
 
     setSuggestions(filtered);
 
-    setInfoAlert(
-      filtered.length === 0
-        ? "We can not find the city you are looking for. Please try another city"
-        : ""
-    );
-  };
-
-  const handleItemClicked = (event) => {
-    const city = event.target.textContent;
-    setQuery(city);
-    setShowSuggestions(false);
-    setCurrentCity(city);
-    setInfoAlert("");
+    
   };
 
   return (

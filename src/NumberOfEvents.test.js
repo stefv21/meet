@@ -6,14 +6,7 @@ import NumberOfEvents from './components/NumberOfEvents';
 
 
 describe('<NumberOfEvents /> component', () => {
-  let NumberOfEventsComponent;
-  let setCurrentNOE;
-  beforeEach(() => {
-    NumberOfEventsComponent = render(<NumberOfEvents 
-      currentNOE={32} 
-      setCurrentNOE={setCurrentNOE}
-      setErrorAlert={() => { }} />);
-  });
+
   
   test('contains an element with the role "textbox"', () => {
     const { getByRole } = render(<NumberOfEvents />);
