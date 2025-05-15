@@ -63,18 +63,18 @@ test('renders the suggestion text in the textbox upon clicking on the suggestion
     const user = userEvent.setup();
     const allEvents = await getEvents();
     const allLocations = extractLocations(allEvents);
-    CitySearchDom.rerender(<CitySearch
+    CitySearchDOM.rerender(<CitySearch
       allLocations={allLocations}
       setCurrentCity={() => { }}
     />);
  
  
-    const cityTextBox = CitySearchDom.queryByRole('textbox');
+    const cityTextBox = CitySearchDOM.queryByRole('textbox');
     await user.type(cityTextBox, "Berlin");
  
  
     // the suggestion's textContent look like this: "Berlin, Germany"
-    const BerlinGermanySuggestion = CitySearchDom.queryAllByRole('listitem')[0];
+    const BerlinGermanySuggestion = CitySearchDOM.queryAllByRole('listitem')[0];
  
  
     await user.click(BerlinGermanySuggestion);

@@ -37,14 +37,27 @@ const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
 
       {showSuggestions && (
         <ul className="suggestions">
-          {suggestions.map(loc => (
-            <li key={loc} onClick={handleItemClicked}>
-              {loc}
-            </li>
-          ))}
-          <li key="See all cities" onClick={handleItemClicked}>
-            <b>See all cities</b>
-          </li>
+        {suggestions.map((loc) => (
+        <li
+          key={loc}
+          onClick={() => {
+            setCurrentCity(loc);
+            setQuery(loc);
+            setShowSuggestions(false);
+          }}
+        >
+          {loc}
+        </li>
+        ))}
+        <li
+        key="See all cities"
+        onClick={() => {
+          setCurrentCity("See all cities");
+          setShowSuggestions(true);
+        }}
+        >
+        <b>See all cities</b>
+        </li>
         </ul>
       )}
     </div>
