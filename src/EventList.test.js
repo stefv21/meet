@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, within, waitFor } from '@testing-library/react';
 import { getEvents } from './api';
-import EventList from './components/EventList';
+import EventList from './components/eventList';
 import App from "./App";
 
 
