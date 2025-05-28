@@ -66,9 +66,11 @@ export async function getAccessToken() {
  * - On localhost: return mockData
  * - Otherwise: fetch real events using the OAuth token
  */
-export async function getEvents() {
-  // during development, skip the API
-  if (window.location.href.startsWith('http://localhost')) {
+export const getEvents = async () => {
+  NProgress.start();
+
+  if (window.location.href.startsWith("http://localhost")) {
+    NProgress.done();
     return mockData;
   }
 
