@@ -1,4 +1,5 @@
 import mockData from './mock-data';
+import NProgress from 'nprogress';
 
 async function checkToken(token) {
   const res = await fetch(
@@ -71,7 +72,7 @@ export const getEvents = async () => {
 
   if (window.location.href.startsWith("http://localhost")) {
     NProgress.done();
-    return mockData;
+    return mockData.events;
   }
 
   const token = await getAccessToken();
