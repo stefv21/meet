@@ -1,9 +1,12 @@
+import path from 'path';
 import React from 'react';
 import { loadFeature, defineFeature } from 'jest-cucumber';
 import { render, waitFor, within, act } from '@testing-library/react';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
-const feature = loadFeature('./src/features/filterEventsByCity.feature');
+import { getEvents } from '../api';
+
+const feature = loadFeature(path.join(__dirname, 'filterEventsByCity.feature'));
 
 defineFeature(feature, test => {
     test('When user hasn’t searched for a city, show upcoming events from all cities.', ({ given, when, then }) => {
@@ -31,13 +34,15 @@ defineFeature(feature, test => {
         
 
 
-    test('User should see a list of suggestions when they search for a city.', ({ given, when, then }) => {
-        let AppComponent;
-        given('the main page is open', () => {
-        await act(async () => {
-          AppComponent = render(<App />);
-        });
-    });
+    test(
+        'User should see a list of suggestions when they search for a city.',
+        ({ given, when, then }) => {
+          let AppComponent;
+          given('the main page is open', async () => {
+            await act(async () => {
+              AppComponent = render(<App />);
+            });
+          });
 
         let CitySearchDOM;
         when('user starts typing in the city textbox', async () => {
