@@ -7,8 +7,11 @@ atatus.config('ee138676f30c49858a9233a6cf6a3105').install();
 
 
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
 )
+
+atatus.notify(new Error('Test Atatus Setup'));

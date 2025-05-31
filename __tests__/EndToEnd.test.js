@@ -12,14 +12,22 @@ describe('show/hide event details', () => {
 
   beforeAll(async () => {
     browser = await puppeteer.launch({
-      headless: true,     // CI-friendly, no UI
-      slowMo: 100,        // optional: slow things down so you can watch locally
+      headless: true,
+      slowMo: 100,
       args: ['--no-sandbox','--disable-setuid-sandbox'],
     });
+  });
+
+  beforeEach(async () => {
     page = await browser.newPage();
     await page.goto('http://localhost:5173/');
     await page.waitForSelector('.event');
   });
+
+  afterEach(async () => {
+    await page.close();
+  });
+
 
   afterAll(async () => {
     await browser.close();
@@ -39,10 +47,16 @@ describe('show/hide event details', () => {
   });
 
   test('User can collapse an event to hide details', async () => {
-    // clicking the same button again should hide it
+    // First expand so .details appears:
     await page.click('.event .details-btn');
-    // short pause to let the collapse animation finish
-    await page.waitForTimeout(200);
+    await page.waitForSelector('.event .details');
+
+    // Then collapse:
+    await page.click('.event .details-btn');
+
+    // ← Wait until the .details element is removed/hidden
+    await page.waitForSelector('.event .details', { hidden: true });
+
     const eventDetails = await page.$('.event .details');
     expect(eventDetails).toBeNull();
   });

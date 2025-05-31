@@ -42,4 +42,3 @@ const App = () => {
 
 export default App;
 
-atatus.notify(new Error('Test Atatus Setup'));
