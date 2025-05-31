@@ -40,14 +40,11 @@ defineFeature(feature, (test) => {
 
     // 2nd Given = Scenario’s “Given the user has not specified a number of events”
     given('the user has not specified a number of events', async () => {
-      // By default, assume the input is untouched. 
-      // If you want to assert it’s empty, do something like:
-      // const value = await page.$eval('.number-of-events-input', el => el.value);
-      // expect(value).toBe('');
+    
     });
 
     when('I view the list of events', async () => {
-      // Page load already rendered them—no extra code needed here.
+      
     });
 
     then('I should see 32 events displayed', async () => {
