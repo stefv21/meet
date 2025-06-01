@@ -19,7 +19,7 @@ const App = () => {
    
   useEffect(() => {
     fetchData();
-  }, [currentCity])
+  }, [currentCity, currentNOE])
 
   const fetchData = async () => {
     try {
@@ -48,7 +48,9 @@ const App = () => {
         allLocations={allLocations}
         setCurrentCity={setCurrentCity}
         setInfoAlert={setInfoAlert} />
-      <NumberOfEvents setCurrentNOE={setCurrentNOE} />
+      <NumberOfEvents 
+      setCurrentNOE={setCurrentNOE}
+      setErrorAlert={setErrorAlert} />
       <EventList events={events} />
     </div>
   );

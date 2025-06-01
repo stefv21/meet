@@ -5,21 +5,36 @@ import NumberOfEvents from './components/NumberOfEvents';
 
 describe('<NumberOfEvents /> component', () => {
   test('contains an element with the role "textbox"', () => {
-    // Pass a no-op function for setCurrentNOE:
-    const { getByRole } = render(<NumberOfEvents setCurrentNOE={() => {}} />);
+    // Pass no-op functions for setCurrentNOE and setErrorAlert:
+    const { getByRole } = render(
+      <NumberOfEvents
+        setCurrentNOE={() => {}}
+        setErrorAlert={() => {}}
+      />
+    );
     const textbox = getByRole('textbox');
     expect(textbox).toBeInTheDocument();
   });
 
   test('default value of the input field is 32', () => {
-    const { getByRole } = render(<NumberOfEvents setCurrentNOE={() => {}} />);
+    const { getByRole } = render(
+      <NumberOfEvents
+        setCurrentNOE={() => {}}
+        setErrorAlert={() => {}}
+      />
+    );
     const textbox = getByRole('textbox');
     // Note: textbox.value is a string, so we compare with "32"
     expect(textbox.value).toBe("32");
   });
 
   test('updates value when a user types in the textbox', async () => {
-    const { getByRole } = render(<NumberOfEvents setCurrentNOE={() => {}} />);
+    const { getByRole } = render(
+      <NumberOfEvents
+        setCurrentNOE={() => {}}
+        setErrorAlert={() => {}}
+      />
+    );
     const textbox = getByRole('textbox');
     const user = userEvent.setup();
     // Clear the textbox and type a new value:
@@ -29,7 +44,12 @@ describe('<NumberOfEvents /> component', () => {
   });
 
   test('simulates backspace and then typing 10', async () => {
-    const { getByRole } = render(<NumberOfEvents setCurrentNOE={() => {}} />);
+    const { getByRole } = render(
+      <NumberOfEvents
+        setCurrentNOE={() => {}}
+        setErrorAlert={() => {}}
+      />
+    );
     const textbox = getByRole('textbox');
     const user = userEvent.setup();
     // Simulate pressing backspace twice and then typing "10"
