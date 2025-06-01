@@ -9,19 +9,32 @@ const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
     setSuggestions(Array.isArray(allLocations) ? allLocations : []);
   }, [allLocations]);
 
-  const handleInputChanged = (e) => {
-    const value = e.target.value;
+  const handleItemClicked = (event) => {
+    const value = event.target.textContent;
     setQuery(value);
+    setShowSuggestions(false);
+    setCurrentCity(value);
+    setInfoAlert("")
+  };
 
-    const filtered = Array.isArray(allLocations)
-      ? allLocations.filter(loc =>
-          loc.toUpperCase().includes(value.toUpperCase())
-        )
-      : [];
-
-    setSuggestions(filtered);
-
-    
+  const handleInputChanged = (event) => {
+    const value = event.target.value;
+    const filteredLocations = allLocations ? allLocations.filter((location) => {
+      return location.toUpperCase().indexOf(value.toUpperCase()) > -1;
+    }) : [];
+ 
+ 
+    setQuery(value);
+    setSuggestions(filteredLocations);
+ 
+ 
+    let infoText;
+    if (filteredLocations.length === 0) {
+      infoText = "We can not find the city you are looking for. Please try another city"
+    } else {
+      infoText = ""
+    }
+    setInfoAlert(infoText);
   };
 
   return (
