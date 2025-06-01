@@ -4,7 +4,7 @@ import CitySearch from './components/CitySearch';
 import EventList from './components/eventlist';
 import NumberOfEvents from './components/NumberOfEvents';
 import { extractLocations, getEvents } from './api';
-import { InfoAlert } from './components/Alert';
+import { InfoAlert, ErrorAlert } from './components/Alert';
 
 import './App.css';
 
@@ -14,27 +14,36 @@ const App = () => {
   const [events,       setEvents]       = useState([]);
   const [currentCity, setCurrentCity] = useState("See all cities");
   const [infoAlert, setInfoAlert] = useState("");
+  const [errorAlert, setErrorAlert] = useState("");
+
    
   useEffect(() => {
     fetchData();
-  }, [currentCity]);
-
+  }, [currentCity])
 
   const fetchData = async () => {
+    try {
     const allEvents = await getEvents();
     const filteredEvents = currentCity === "See all cities" ?
       allEvents :
       allEvents.filter(event => event.location === currentCity)
     setEvents(filteredEvents.slice(0, currentNOE));
     setAllLocations(extractLocations(allEvents));
+    setInfoAlert("");
+    setErrorAlert("");
+  } catch (error) {
+    setErrorAlert("Something went wrong. Please try again later.");
+    setInfoAlert("");
   }
-
+};
 
   return (
     <div className="App">
       <div className="alerts-container">
         {infoAlert.length ? <InfoAlert text={infoAlert} /> : null}
+        {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null}
       </div>
+
       <CitySearch
         allLocations={allLocations}
         setCurrentCity={setCurrentCity}
