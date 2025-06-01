@@ -7,8 +7,6 @@ import { extractLocations, getEvents } from './api';
 
 
 describe('<CitySearch /> component', () => {
-
-
   let CitySearchDOM;
   let cityTextBox;
   beforeEach(() => {
@@ -19,6 +17,8 @@ describe('<CitySearch /> component', () => {
       />);
       cityTextBox = CitySearchDOM.queryByRole('textbox');
   });
+
+
 
   test("render text input", () => {
       expect(cityTextBox).toBeInTheDocument();
@@ -59,6 +59,7 @@ test('updates list of suggestions correctly when user types in city textbox', as
         expect(suggestionListItems[i].textContent).toBe(suggestions[i]);
     }
 });
+
 test('renders the suggestion text in the textbox upon clicking on the suggestion', async () => {
     const user = userEvent.setup();
     const allEvents = await getEvents();
@@ -66,6 +67,7 @@ test('renders the suggestion text in the textbox upon clicking on the suggestion
     CitySearchDOM.rerender(<CitySearch
       allLocations={allLocations}
       setCurrentCity={() => { }}
+      setInfoAlert={() => {}}
     />);
  
  
