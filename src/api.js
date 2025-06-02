@@ -70,7 +70,15 @@ export async function getAccessToken() {
  * - Otherwise: fetch real events using the OAuth token
  */
 export const getEvents = async () => {
+  if (!navigator.onLine) {
+    const events = localStorage.getItem("lastEvents");
+    NProgress.done();
+    return events?JSON.parse(events):[];
+  }
+  
+  
   NProgress.start();
+
 
   if (window.location.href.startsWith("http://localhost")) {
     NProgress.done();
