@@ -51,6 +51,8 @@ export async function getAccessToken() {
         code
       )}`
     );
+
+
     const { access_token } = await exchange.json();
     localStorage.setItem('access_token', access_token);
     removeQuery();
@@ -78,12 +80,20 @@ export const getEvents = async () => {
   const token = await getAccessToken();
   if (!token) return [];
 
-  const res = await fetch(
-    `https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/events/${token}`
-  );
-  const json = await res.json();
-  return json.events || [];
-}
+  // ─── replace the old fetch/json/return with caching logic ───
+  const url = `https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/events/${token}`;
+  const response = await fetch(url);
+  const result = await response.json();
+
+  if (result) {
+    NProgress.done();
+    localStorage.setItem("lastEvents", JSON.stringify(result.events));
+    return result.events;
+  } else {
+    return null;
+  }
+};
+
 
 /**
  * Pull out all unique locations from an array of event objects.
