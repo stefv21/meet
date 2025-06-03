@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import CitySearch from './components/CitySearch';
 import EventList from './components/eventlist';         // adjust if your filename is EventList.jsx
 import NumberOfEvents from './components/NumberOfEvents';
+import CityEventsChart from './components/CityEventsChart';
 import { extractLocations, getEvents } from './api';
 import { InfoAlert, ErrorAlert, WarningAlert } from './components/Alert';
 
@@ -71,7 +72,13 @@ const App = () => {
         setCurrentNOE={setCurrentNOE}
         setErrorAlert={setErrorAlert}
       />
-      <CityEventsChart allLocations={allLocations} events={events} />
+        {/* ─── Wrap charts here so they can sit side by side ─── */}
+        <div className="charts-container">
+        <CityEventsChart allLocations={allLocations} events={events} />
+        {/* Later, add your second chart component here: */}
+        {/* <YourSecondChartComponent … /> */}
+      </div>
+
       <EventList events={events} />
     </div>
   );
