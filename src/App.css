@@ -69,3 +69,17 @@
   gap: 2rem; /* Optional: adds space between the charts */
   margin-top: 2rem; /* Optional: adds space above the chart section */
 }
+
+.charts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+/* Step 2: Responsive layout for smaller screens */
+@media (max-width: 768px) {
+  .charts-container {
+    grid-template-columns: 1fr; /* Stack the charts vertically */
+  }
+}
