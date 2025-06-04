@@ -60,3 +60,12 @@
   flex: 1 1 300px; /* grow/shrink, min width 300px */
   max-width: 500px; /* or whatever max size you prefer */
 }
+
+/* src/App.css */
+
+.charts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns of equal width */
+  gap: 2rem; /* Optional: adds space between the charts */
+  margin-top: 2rem; /* Optional: adds space above the chart section */
+}

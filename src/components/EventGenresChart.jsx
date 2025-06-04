@@ -27,7 +27,7 @@ const EventGenresChart = ({ events }) => {
     setData(getData());
   }, [events]);
 
-  // ✅ Step 11: Custom label function to show genre name + % value
+  
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
     const RADIAN = Math.PI / 180;
     const radius = outerRadius;
@@ -55,8 +55,8 @@ const EventGenresChart = ({ events }) => {
           dataKey="value"
           fill="#8884d8"
           labelLine={false}
-          label={renderCustomizedLabel} // ✅ Using custom label here
-          outerRadius={150} // ✅ Step 11: Update radius
+          label={renderCustomizedLabel} 
+          outerRadius={150} 
         />
       </PieChart>
     </ResponsiveContainer>

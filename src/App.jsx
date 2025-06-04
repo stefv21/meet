@@ -1,8 +1,7 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import CitySearch from './components/CitySearch';
-import EventList from './components/eventlist';         // adjust if your filename is EventList.jsx
+import EventList from './components/eventlist'; // Adjust if filename is different
 import NumberOfEvents from './components/NumberOfEvents';
 import CityEventsChart from './components/CityEventsChart';
 import EventGenresChart from './components/EventGenresChart';
@@ -12,13 +11,13 @@ import { InfoAlert, ErrorAlert, WarningAlert } from './components/Alert';
 import './App.css';
 
 const App = () => {
-  const [allLocations, setAllLocations]  = useState([]);
-  const [currentNOE,   setCurrentNOE]    = useState(32);
-  const [events,       setEvents]        = useState([]);
-  const [currentCity,  setCurrentCity]   = useState("See all cities");
-  const [infoAlert,    setInfoAlert]     = useState("");
-  const [errorAlert,   setErrorAlert]    = useState("");
-  const [warningAlert, setWarningAlert]  = useState("");
+  const [allLocations, setAllLocations] = useState([]);
+  const [currentNOE, setCurrentNOE] = useState(32);
+  const [events, setEvents] = useState([]);
+  const [currentCity, setCurrentCity] = useState("See all cities");
+  const [infoAlert, setInfoAlert] = useState("");
+  const [errorAlert, setErrorAlert] = useState("");
+  const [warningAlert, setWarningAlert] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -26,7 +25,6 @@ const App = () => {
 
   const fetchData = async () => {
     try {
-      // 1) If offline, load from cache and show WarningAlert
       if (!navigator.onLine) {
         const cachedEvents = localStorage.getItem("lastEvents");
         const offlineEvents = cachedEvents ? JSON.parse(cachedEvents) : [];
@@ -38,12 +36,12 @@ const App = () => {
         return;
       }
 
-      // 2) Online path: clear any previous warning, then fetch live data
       setWarningAlert("");
       const allEvents = await getEvents();
-      const filteredEvents = currentCity === "See all cities"
-        ? allEvents
-        : allEvents.filter(event => event.location === currentCity);
+      const filteredEvents =
+        currentCity === "See all cities"
+          ? allEvents
+          : allEvents.filter(event => event.location === currentCity);
 
       setEvents(filteredEvents.slice(0, currentNOE));
       setAllLocations(extractLocations(allEvents));
@@ -58,9 +56,9 @@ const App = () => {
   return (
     <div className="App">
       <div className="alerts-container">
-        {infoAlert.length    ? <InfoAlert    text={infoAlert}    /> : null}
-        {errorAlert.length   ? <ErrorAlert   text={errorAlert}   /> : null}
-        {warningAlert.length ? <WarningAlert text={warningAlert} /> : null}
+        {infoAlert && <InfoAlert text={infoAlert} />}
+        {errorAlert && <ErrorAlert text={errorAlert} />}
+        {warningAlert && <WarningAlert text={warningAlert} />}
       </div>
 
       <CitySearch
@@ -73,8 +71,9 @@ const App = () => {
         setCurrentNOE={setCurrentNOE}
         setErrorAlert={setErrorAlert}
       />
-        {/* ─── Wrap charts here so they can sit side by side ─── */}
-        <div className="charts-container">
+
+      {/* ── Chart Grid Display ── */}
+      <div className="charts-container">
         <CityEventsChart allLocations={allLocations} events={events} />
         <EventGenresChart events={events} />
       </div>
