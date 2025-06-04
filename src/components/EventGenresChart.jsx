@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PieChart,
   Pie,
@@ -22,24 +22,16 @@ const EventGenresChart = ({ events }) => {
   const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c'];
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="99%" height={400}>
       <PieChart>
         <Pie
-          data={genreData}
+          data={data}
           dataKey="value"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          outerRadius={80}
+          fill="#8884d8"
+          labelLine={false}
           label
-        >
-          {genreData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-
-        <Tooltip />
-        <Legend verticalAlign="bottom" height={36} />
+          outerRadius={130}
+        />
       </PieChart>
     </ResponsiveContainer>
   );
