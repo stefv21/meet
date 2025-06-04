@@ -2,24 +2,32 @@ import React, { useState, useEffect } from 'react';
 import {
   PieChart,
   Pie,
-  Cell,
-  Tooltip,
-  Legend,
   ResponsiveContainer
 } from 'recharts';
 
 const EventGenresChart = ({ events }) => {
-  // Count how many events mention each genre keyword in their summary
-  const genreData = [
-    { name: 'React',      value: events.filter(e => e.summary?.includes('React')).length },
-    { name: 'JavaScript', value: events.filter(e => e.summary?.includes('JavaScript')).length },
-    { name: 'Node',       value: events.filter(e => e.summary?.includes('Node')).length },
-    { name: 'jQuery',     value: events.filter(e => e.summary?.includes('jQuery')).length },
-    { name: 'AngularJS',  value: events.filter(e => e.summary?.includes('AngularJS')).length }
-  ];
+  const [data, setData] = useState([]);
 
-  // A simple color palette—one per slice
-  const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c'];
+  const genres = ['React', 'JavaScript', 'Node', 'jQuery', 'AngularJS'];
+
+  const getData = () => {
+    const data = genres.map((genre) => {
+      const filteredEvents = events.filter((event) =>
+        event.summary?.includes(genre)
+      );
+
+      return {
+        name: genre,
+        value: filteredEvents.length
+      };
+    });
+
+    return data;
+  };
+
+  useEffect(() => {
+    setData(getData());
+  }, [events]);
 
   return (
     <ResponsiveContainer width="99%" height={400}>
