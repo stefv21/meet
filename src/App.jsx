@@ -48,7 +48,7 @@ const App = () => {
       setInfoAlert("");
       setErrorAlert("");
     } catch (error) {
-      setErrorAlert("Something went wrong. Please try again later.");
+      setErrorAlert(error);
       setInfoAlert("");
     }
   };
