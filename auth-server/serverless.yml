@@ -5,10 +5,13 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   timeout: 30 
+
   environment:
-    CLIENT_ID: ${file(config.json):CLIENT_ID}
-    CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
-    CALENDAR_ID: ${file(config.json):CALENDAR_ID}
+    CLIENT_ID:     ${env:CLIENT_ID}
+    CLIENT_SECRET: ${env:CLIENT_SECRET}
+    CALENDAR_ID:   ${env:CALENDAR_ID}
+    REDIRECT_URI:  ${env:REDIRECT_URI}
+
 
 functions:
   getAuthURL:
