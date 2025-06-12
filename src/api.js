@@ -89,7 +89,8 @@ export const getEvents = async () => {
   if (!token) return [];
 
   // ─── replace the old fetch/json/return with caching logic ───
-  const url = `https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/events/${token}`;
+const url = `https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-events/${token}`;
+
   const response = await fetch(url);
   const result = await response.json();
 
