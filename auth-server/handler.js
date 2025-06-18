@@ -3,7 +3,7 @@
 const { google } = require("googleapis");
 const calendar = google.calendar("v3");
 const SCOPES = [
-  "https://www.googleapis.com/auth/calendar.events.public.readonly",
+  "https://www.googleapis.com/auth/calendar.events.public.readonly"
 ];
 const { CLIENT_SECRET, CLIENT_ID, CALENDAR_ID } = process.env;
 
@@ -15,7 +15,7 @@ const redirect_uris = [
 const oAuth2Client = new google.auth.OAuth2(
   CLIENT_ID,
   CLIENT_SECRET,
-  redirect_uris[0],
+  redirect_uris[0]
 );
 
 module.exports.getAuthURL = async () => {
@@ -61,6 +61,10 @@ module.exports.getAuthURL = async () => {
     .catch((error) => {
       return {
         statusCode: 500,
+      headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
         body: JSON.stringify(error),
       };
     });
@@ -68,9 +72,10 @@ module.exports.getAuthURL = async () => {
 
 
 module.exports.getCalendarEvents = async (event) => {
-  const access_token = decodeURIComponent(event.pathParameters.access_token);
+  const access_token = decodeURIComponent(`${event.pathParameters.access_token}`);
+    oAuth2Client.setCredentials({ access_token });
 
-  oAuth2Client.setCredentials({ access_token });
+ 
 
   return new Promise((resolve, reject) => {
     calendar.events.list(
@@ -81,13 +86,13 @@ module.exports.getCalendarEvents = async (event) => {
         singleEvents: true,
         orderBy: "startTime",
       },
-      (error, response) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response);
-        }
-      },
+       (error, response) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(response);
+            }
+    
     );
   })
   .then((results) => {
@@ -100,11 +105,14 @@ module.exports.getCalendarEvents = async (event) => {
         body: JSON.stringify({ events: results.data.items }),
       };
     })
-    .catch((error) => {
-      console.error("Error fetching calendar events:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Failed to fetch calendar events" }),
-      };
-    });
+     .catch((error) => {
+            return {
+                statusCode: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true,
+                },
+                body: JSON.stringify(error),
+            };
+        });
 };
