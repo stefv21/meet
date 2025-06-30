@@ -4,19 +4,19 @@
     "description": "Find and manage upcoming events from your favorite locations.",
     "icons": [
     {
-        "src": "icons/meet-app-192.png",
+        "src": "meet-app-192.png",
         "sizes": "192x192",
         "type": "image/png",
         "purpose": "maskable any"
     },
     {
-        "src": "icons/meet-app-512.png",
+        "src": "meet-app-512.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "maskable any"
     },
     {
-        "src": "icons/meet-app-144.png",
+        "src": "meet-app-144.png",
         "sizes": "144x144",
         "type": "image/png",
         "purpose": "any"
