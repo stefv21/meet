@@ -11,7 +11,6 @@ provider:
     CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
     CALENDAR_ID: ${file(config.json):CALENDAR_ID}
 
-
 functions:
   getAuthURL:
     handler: handler.getAuthURL
@@ -19,15 +18,35 @@ functions:
       - http:
           path: api/get-auth-url
           method: get
+          cors:
+            origin: 'https://meet-ten-gamma.vercel.app'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: false
+
   getAccessToken:
     handler: handler.getAccessToken
     events:
       - http:
           path: api/token/{code}
           method: get
+          cors:
+            origin: 'https://meet-ten-gamma.vercel.app'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: false
+
   getCalendarEvents:
     handler: handler.getCalendarEvents
     events:
       - http:
           path: api/get-events/{access_token}
           method: get
+          cors:
+            origin: 'https://meet-ten-gamma.vercel.app'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: false
