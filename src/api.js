@@ -4,6 +4,7 @@ import NProgress from 'nprogress';
 
 // Use mock data in dev or when VITE_USE_MOCK=true
 const useMock = import.meta.env.DEV || import.meta.env.VITE_USE_MOCK === 'true';
+console.log('useMock:', useMock, 'VITE_USE_MOCK:', import.meta.env.VITE_USE_MOCK, 'import.meta.env.DEV:', import.meta.env.DEV);
 
 async function checkToken(token) {
   const res = await fetch(
