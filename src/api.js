@@ -69,16 +69,15 @@ export async function getAccessToken() {
  * - On localhost: return mockData
  * - Otherwise: fetch real events using the OAuth token
  */
+
 export const getEvents = async () => {
   if (!navigator.onLine) {
     const events = localStorage.getItem("lastEvents");
     NProgress.done();
-    return events?JSON.parse(events):[];
+    return events ? JSON.parse(events) : [];
   }
-  
-  
-  NProgress.start();
 
+  NProgress.start();
 
   if (window.location.href.startsWith("http://localhost")) {
     NProgress.done();
@@ -88,10 +87,17 @@ export const getEvents = async () => {
   const token = await getAccessToken();
   if (!token) return [];
 
-  // ─── replace the old fetch/json/return with caching logic ───
-const url = `https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-events/${token}`;
+  // ─── call with Authorization header ───
+  const url = 'https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-events';
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
   const result = await response.json();
 
   if (result) {
