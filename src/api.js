@@ -1,5 +1,9 @@
+// src/api.js
 import mockData from './mock-data';
 import NProgress from 'nprogress';
+
+// Use mock data in dev or when VITE_USE_MOCK=true
+const useMock = import.meta.env.DEV || import.meta.env.VITE_USE_MOCK === 'true';
 
 async function checkToken(token) {
   const res = await fetch(
@@ -7,7 +11,6 @@ async function checkToken(token) {
   );
   return res.json();
 }
-
 
 function removeQuery() {
   if (window.history.replaceState) {
@@ -17,11 +20,10 @@ function removeQuery() {
   }
 }
 
-
 export async function getAccessToken() {
   let token = localStorage.getItem('access_token');
 
-  // Check if token is valid
+  // 1) If we already have a token, verify it
   if (token) {
     const info = await checkToken(token);
     if (info.error) {
@@ -30,19 +32,14 @@ export async function getAccessToken() {
     }
   }
 
-  // If no valid token, look for a code in the URL or redirect
+  // 2) If no valid token, check URL for code (but do NOT auto-redirect)
   if (!token) {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
     if (!code) {
-      // Request an auth URL and send the user there
-      const resp = await fetch(
-        'https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-auth-url'
-      );
-      const { authUrl } = await resp.json();
-      window.location.href = authUrl;
-      return null; // navigation away
+      // No token & no code: bail out (we’ll mock instead)
+      return null;
     }
 
     // Exchange code for token
@@ -51,45 +48,47 @@ export async function getAccessToken() {
         code
       )}`
     );
-
-
     const { access_token } = await exchange.json();
+
     localStorage.setItem('access_token', access_token);
     removeQuery();
     return access_token;
   }
 
-  // Clean up the URL and return the existing token
+  // 3) Clean up URL and return existing token
   removeQuery();
   return token;
 }
 
 /**
  * Get the list of events.
- * - On localhost: return mockData
- * - Otherwise: fetch real events using the OAuth token
+ * - If offline: return cached events
+ * - If useMock: return mockData (dev or VITE_USE_MOCK)
+ * - Otherwise: perform real OAuth flow and fetch
  */
-
 export const getEvents = async () => {
   if (!navigator.onLine) {
-    const events = localStorage.getItem("lastEvents");
     NProgress.done();
-    return events ? JSON.parse(events) : [];
+    const cached = localStorage.getItem('lastEvents');
+    return cached ? JSON.parse(cached) : [];
   }
 
   NProgress.start();
 
-  if (window.location.href.startsWith("http://localhost")) {
+  // Use mock data before doing any real OAuth
+  if (useMock) {
     NProgress.done();
     return mockData;
   }
 
+  // Real flow
   const token = await getAccessToken();
-  if (!token) return [];
+  if (!token) {
+    NProgress.done();
+    return [];
+  }
 
-  // ─── call with Authorization header ───
   const url = 'https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-events';
-
   const response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -97,18 +96,17 @@ export const getEvents = async () => {
       'Content-Type': 'application/json'
     }
   });
-
   const result = await response.json();
 
-  if (result) {
+  if (result && result.events) {
     NProgress.done();
-    localStorage.setItem("lastEvents", JSON.stringify(result.events));
+    localStorage.setItem('lastEvents', JSON.stringify(result.events));
     return result.events;
-  } else {
-    return null;
   }
-};
 
+  NProgress.done();
+  return [];
+};
 
 /**
  * Pull out all unique locations from an array of event objects.
