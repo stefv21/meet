@@ -102,7 +102,10 @@ export async function getAccessToken() {
  * - Otherwise: perform real OAuth flow and fetch
  */
 export const getEvents = async () => {
+  console.log('getEvents called - useMock:', useMock);
+  
   if (!navigator.onLine) {
+    console.log('Offline - using cached data');
     NProgress.done();
     const cached = localStorage.getItem('lastEvents');
     return cached ? JSON.parse(cached) : [];
@@ -112,9 +115,12 @@ export const getEvents = async () => {
 
   // Use mock data before doing any real OAuth
   if (useMock) {
+    console.log('Using mock data - no API calls');
     NProgress.done();
     return mockData;
   }
+  
+  console.log('WARNING: About to make real API call - this should not happen!');
 
   // Real flow
   const token = await getAccessToken();
