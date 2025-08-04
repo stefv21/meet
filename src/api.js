@@ -2,10 +2,14 @@
 import mockData from './mock-data';
 import NProgress from 'nprogress';
 
-// Use mock data in dev, when VITE_USE_MOCK=true, or on Vercel deployment
-const useMock = import.meta.env.DEV || 
-                import.meta.env.VITE_USE_MOCK === 'true' ||
-                window.location.hostname.includes('vercel.app');
+// Force mock data in production to avoid CORS issues
+const useMock = true; // Temporarily force mock mode
+
+console.log('API Debug:', {
+  hostname: window.location.hostname,
+  isDev: import.meta.env.DEV,
+  usesMock: useMock
+});
 
 async function checkToken(token) {
   try {
