@@ -110,7 +110,7 @@ const isLocalhost = Boolean(
             console.error('Service worker ready failed:', error?.message?.replace(/[\r\n]/g, ' ') || 'Unknown error');
           });
         } else {
-         
+          // Service worker found. Proceed as normal.
           registerValidSW(swUrl, config);
         }
       })

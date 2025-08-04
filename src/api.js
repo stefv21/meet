@@ -2,8 +2,10 @@
 import mockData from './mock-data';
 import NProgress from 'nprogress';
 
-// Use mock data in dev or when VITE_USE_MOCK=true
-const useMock = import.meta.env.DEV || import.meta.env.VITE_USE_MOCK === 'true';
+// Use mock data in dev, when VITE_USE_MOCK=true, or on Vercel deployment
+const useMock = import.meta.env.DEV || 
+                import.meta.env.VITE_USE_MOCK === 'true' ||
+                window.location.hostname.includes('vercel.app');
 
 async function checkToken(token) {
   try {
