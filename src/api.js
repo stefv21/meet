@@ -27,6 +27,11 @@ function removeQuery() {
 }
 
 export async function getAccessToken() {
+  // Skip token logic entirely when using mock data
+  if (useMock) {
+    return null;
+  }
+  
   let tokenData = sessionStorage.getItem('access_token');
   let token = null;
   
