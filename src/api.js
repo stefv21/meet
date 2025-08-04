@@ -4,13 +4,16 @@ import NProgress from 'nprogress';
 
 // Use mock data in dev or when VITE_USE_MOCK=true
 const useMock = import.meta.env.DEV || import.meta.env.VITE_USE_MOCK === 'true';
-console.log('useMock:', useMock, 'VITE_USE_MOCK:', import.meta.env.VITE_USE_MOCK, 'import.meta.env.DEV:', import.meta.env.DEV);
 
 async function checkToken(token) {
-  const res = await fetch(
-    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${token}`
-  );
-  return res.json();
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${token}`
+    );
+    return res.json();
+  } catch {
+    return { error: 'invalid_token' };
+  }
 }
 
 function removeQuery() {
@@ -22,13 +25,28 @@ function removeQuery() {
 }
 
 export async function getAccessToken() {
-  let token = localStorage.getItem('access_token');
+  let tokenData = sessionStorage.getItem('access_token');
+  let token = null;
+  
+  // Parse and validate stored token
+  if (tokenData) {
+    try {
+      const parsed = JSON.parse(tokenData);
+      if (parsed.expires > Date.now()) {
+        token = parsed.token;
+      } else {
+        sessionStorage.removeItem('access_token');
+      }
+    } catch {
+      sessionStorage.removeItem('access_token');
+    }
+  }
 
   // 1) If we already have a token, verify it
   if (token) {
     const info = await checkToken(token);
     if (info.error) {
-      localStorage.removeItem('access_token');
+      sessionStorage.removeItem('access_token');
       token = null;
     }
   }
@@ -51,7 +69,12 @@ export async function getAccessToken() {
     );
     const { access_token } = await exchange.json();
 
-    localStorage.setItem('access_token', access_token);
+    // Store with expiration (1 hour)
+    const tokenData = {
+      token: access_token,
+      expires: Date.now() + 3600000
+    };
+    sessionStorage.setItem('access_token', JSON.stringify(tokenData));
     removeQuery();
     return access_token;
   }
@@ -90,19 +113,23 @@ export const getEvents = async () => {
   }
 
   const url = 'https://pifv3u6884.execute-api.us-east-1.amazonaws.com/dev/api/get-events';
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  const result = await response.json();
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const result = await response.json();
 
-  if (result && result.events) {
-    NProgress.done();
-    localStorage.setItem('lastEvents', JSON.stringify(result.events));
-    return result.events;
+    if (result && result.events) {
+      NProgress.done();
+      localStorage.setItem('lastEvents', JSON.stringify(result.events));
+      return result.events;
+    }
+  } catch {
+    // Return empty array on any error
   }
 
   NProgress.done();
@@ -111,8 +138,10 @@ export const getEvents = async () => {
 
 /**
  * Pull out all unique locations from an array of event objects.
+ * @param {Array} events - Array of event objects with location property
+ * @returns {Array} Array of unique location strings
  */
 export function extractLocations(events = []) {
-  const allLocs = events.map(e => e.location);
-  return [...new Set(allLocs)];
+  const allLocations = events.map(event => event?.location).filter(Boolean);
+  return [...new Set(allLocations)];
 }

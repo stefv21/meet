@@ -50,3 +50,4 @@ functions:
               - Content-Type
               - Authorization
             allowCredentials: false
+

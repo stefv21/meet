@@ -32,6 +32,8 @@ const isLocalhost = Boolean(
                 'This web app is being served cache-first by a service ' +
                   'worker. To learn more, visit https://cra.link/PWA'
               );
+            }).catch((error) => {
+              console.error('Service worker ready failed:', error?.message?.replace(/[\r\n]/g, ' ') || 'Unknown error');
             });
           } else {
             // Register the service worker for production builds
@@ -81,7 +83,7 @@ const isLocalhost = Boolean(
         };
       })
       .catch((error) => {
-        console.error('Error during service worker registration:', error);
+        console.error('Error during service worker registration:', error?.message?.replace(/[\r\n]/g, ' ') || 'Unknown error');
       });
   }
   
@@ -101,10 +103,14 @@ const isLocalhost = Boolean(
           navigator.serviceWorker.ready.then((registration) => {
             registration.unregister().then(() => {
               window.location.reload();
+            }).catch((error) => {
+              console.error('Service worker unregister failed:', error?.message?.replace(/[\r\n]/g, ' ') || 'Unknown error');
             });
+          }).catch((error) => {
+            console.error('Service worker ready failed:', error?.message?.replace(/[\r\n]/g, ' ') || 'Unknown error');
           });
         } else {
-          // Service worker found. Proceed as normal.
+         
           registerValidSW(swUrl, config);
         }
       })
@@ -117,10 +123,12 @@ const isLocalhost = Boolean(
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready
         .then((registration) => {
-          registration.unregister();
+          registration.unregister().catch((error) => {
+            console.error('Service worker unregister failed:', error?.message?.replace(/[\r\n]/g, ' ') || 'Unknown error');
+          });
         })
         .catch((error) => {
-          console.error(error.message);
+          console.error(error?.message?.replace(/[\r\n]/g, ' ') || 'Unknown error');
         });
     }
   }

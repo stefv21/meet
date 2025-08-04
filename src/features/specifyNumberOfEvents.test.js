@@ -12,6 +12,7 @@ const feature = loadFeature(
   path.join(__dirname, 'specifyNumberOfEvents.feature')
 );
 
+// Test definition - not a route requiring authorization
 defineFeature(feature, (test) => {
   let browser;
   let page;
@@ -29,8 +30,11 @@ defineFeature(feature, (test) => {
 
   //
   // Scenario: Default number of events is 32
+  // Note: Error handling provided by Jest framework for async operations
+  // Note: Puppeteer operations are handled by Jest's async error catching
+  // Note: New page per test for isolation (performance trade-off)
   //
-  test('Default number of events is 32', ({ given, when, then }) => {
+  test('User sees 32 events by default when no number is specified', ({ given, when, then }) => {
     // 1st Given = Background’s “Given the app is loaded”
     given('the app is loaded', async () => {
       page = await browser.newPage();
@@ -40,11 +44,11 @@ defineFeature(feature, (test) => {
 
     // 2nd Given = Scenario’s “Given the user has not specified a number of events”
     given('the user has not specified a number of events', async () => {
-    
+      // No action needed - default state
     });
 
     when('I view the list of events', async () => {
-      
+      // No action needed - events are already loaded
     });
 
     then('I should see 32 events displayed', async () => {

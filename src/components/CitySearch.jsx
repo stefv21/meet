@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
+const LABELS = {
+  SEE_ALL_CITIES: 'See all cities'
+};
+
 const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [query,           setQuery]           = useState("");
@@ -20,7 +24,7 @@ const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
   const handleInputChanged = (event) => {
     const value = event.target.value;
     const filteredLocations = allLocations ? allLocations.filter((location) => {
-      return location.toUpperCase().indexOf(value.toUpperCase()) > -1;
+      return location && typeof location === 'string' && location.toUpperCase().indexOf(value.toUpperCase()) > -1;
     }) : [];
  
  
@@ -51,25 +55,25 @@ const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
       {showSuggestions && (
         <ul className="suggestions">
         {suggestions.map((loc) => (
-        <li
-          key={loc}
-          onClick={() => {
-            setCurrentCity(loc);
-            setQuery(loc);
-            setShowSuggestions(false);
-          }}
-        >
-          {loc}
-        </li>
+          <li
+            key={loc}
+            onClick={() => {
+              setCurrentCity(loc);
+              setQuery(loc);
+              setShowSuggestions(false);
+            }}
+          >
+            {loc}
+          </li>
         ))}
         <li
-        key="See all cities"
+        key={LABELS.SEE_ALL_CITIES}
         onClick={() => {
-          setCurrentCity("See all cities");
+          setCurrentCity(LABELS.SEE_ALL_CITIES);
           setShowSuggestions(true);
         }}
         >
-        <b>See all cities</b>
+        <b>{LABELS.SEE_ALL_CITIES}</b>
         </li>
         </ul>
       )}

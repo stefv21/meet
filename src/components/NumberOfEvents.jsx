@@ -35,10 +35,9 @@ const NumberOfEvents = ({ setCurrentNOE, setErrorAlert }) => {
   return (
     <div id="number-of-events">
       <input
-        type="text"
+        type="number"
         value={number}
         onChange={handleInputChanged}
-        role="textbox"
       />
     </div>
   );

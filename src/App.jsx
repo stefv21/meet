@@ -12,7 +12,7 @@ import './App.css';
 
 const App = () => {
   const [allLocations, setAllLocations] = useState([]);
-  const [currentNOE, setCurrentNOE] = useState(32);
+  const [numberOfEvents, setNumberOfEvents] = useState(32);
   const [events, setEvents] = useState([]);
   const [currentCity, setCurrentCity] = useState("See all cities");
   const [infoAlert, setInfoAlert] = useState("");
@@ -21,7 +21,7 @@ const App = () => {
 
   useEffect(() => {
     fetchData();
-  }, [currentCity, currentNOE]);
+  }, [currentCity, numberOfEvents]);
 
   const fetchData = async () => {
     try {
@@ -43,7 +43,7 @@ const App = () => {
           ? allEvents
           : allEvents.filter(event => event.location === currentCity);
 
-      setEvents(filteredEvents.slice(0, currentNOE));
+      setEvents(filteredEvents.slice(0, numberOfEvents));
       setAllLocations(extractLocations(allEvents));
       setInfoAlert("");
       setErrorAlert("");
@@ -68,7 +68,7 @@ const App = () => {
       />
 
       <NumberOfEvents
-        setCurrentNOE={setCurrentNOE}
+        setCurrentNOE={setNumberOfEvents}
         setErrorAlert={setErrorAlert}
       />
 

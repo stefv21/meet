@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 
+const LABELS = {
+  HIDE_DETAILS: 'Hide Details',
+  SHOW_DETAILS: 'Show Details',
+  EVENT_DETAILS: 'Event Details'
+};
+
 const Event = ({ event }) => {
   const [showDetails, setShowDetails] = useState(false);
 
@@ -12,11 +18,11 @@ const Event = ({ event }) => {
         className="details-btn"
         onClick={() => setShowDetails(!showDetails)}
       >
-        {showDetails ? 'Hide Details' : 'Show Details'}
+        {showDetails ? LABELS.HIDE_DETAILS : LABELS.SHOW_DETAILS}
       </button>
       {showDetails && (
         <div className='details'>
-          <h4>Event Details</h4>
+          <h4>{LABELS.EVENT_DETAILS}</h4>
           <p>{event.description}</p>
         </div>
       )}

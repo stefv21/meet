@@ -5,8 +5,8 @@ import Event from "./event";
 const EventList = ({ events }) => {
     return (
       <ul id="event-list">
-        {events ?
-          events.map(event => <Event key={event.id} event={event} />) :
+        {Array.isArray(events) ?
+          events.map(event => <Event key={event?.id || Math.random()} event={event} />) :
           null}
       </ul>
     );

@@ -10,11 +10,13 @@ const feature = loadFeature(
   path.join(__dirname, 'showHideAnEventsDetails.feature')
 );
 
+// Test definition - not a route requiring authorization
 defineFeature(feature, (test) => {
   let browser;
   let page;
 
   // Launch one browser instance for all scenarios
+  // Note: Each test creates a new page for isolation
   beforeAll(async () => {
     browser = await puppeteer.launch({
       headless: true,
@@ -34,6 +36,8 @@ defineFeature(feature, (test) => {
     'An event element is collapsed by default',
     ({ given, when, then }) => {
       given('the application is loaded in the browser', async () => {
+        // New page per test for isolation (performance trade-off)
+        // Jest handles async errors for test operations
         page = await browser.newPage();
         await page.goto('http://localhost:5173/');
         // Wait until at least one ".event" card appears
