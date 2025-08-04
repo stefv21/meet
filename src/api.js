@@ -5,10 +5,15 @@ import NProgress from 'nprogress';
 // Force mock data in production to avoid CORS issues
 const useMock = true; // Temporarily force mock mode
 
+// Clear any cached authentication data to prevent CORS issues
+sessionStorage.removeItem('access_token');
+localStorage.removeItem('lastEvents');
+
 console.log('API Debug:', {
   hostname: window.location.hostname,
   isDev: import.meta.env.DEV,
-  usesMock: useMock
+  usesMock: useMock,
+  clearedAuth: true
 });
 
 async function checkToken(token) {
