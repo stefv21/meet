@@ -36,7 +36,7 @@ const EventGenresChart = ({ events }) => {
   
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
     const RADIAN = Math.PI / 180;
-    const LABEL_OFFSET = 1.07; // Distance multiplier for label positioning
+    const LABEL_OFFSET = 1.02; // Reduced offset to prevent cutoff
     const x = cx + outerRadius * Math.cos(-midAngle * RADIAN) * LABEL_OFFSET;
     const y = cy + outerRadius * Math.sin(-midAngle * RADIAN) * LABEL_OFFSET;
 
@@ -55,7 +55,7 @@ const EventGenresChart = ({ events }) => {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <PieChart>
+      <PieChart margin={{ top: 40, right: 40, bottom: 40, left: 40 }}>
         <Pie
           data={data}
           cx="50%"
@@ -64,7 +64,7 @@ const EventGenresChart = ({ events }) => {
           fill="#8884d8"
           labelLine={false}
           label={renderCustomizedLabel} 
-          outerRadius="30%"
+          outerRadius={100}
         />
       </PieChart>
     </ResponsiveContainer>
